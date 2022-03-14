@@ -13,6 +13,15 @@ services:
     depends_on:
       - db
 
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - 8082:8080
+    depends_on:
+      - db
+
   db:
     image: postgres:13.0-alpine
     volumes:
