@@ -2,11 +2,11 @@ import React, { useEffect } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
-import { fetchAllQa, addNewQa, updateQa, deleteQa } from "./server";
+import { login, fetchAllQa, addNewQa, updateQa, deleteQa } from "./server";
 
 function App() {
   useEffect(() => {
-    fetchAllQa();
+    login().then((res) => fetchAllQa(res.data.access));
   }, []);
 
   return (

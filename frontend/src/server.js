@@ -1,8 +1,21 @@
 import axios from "axios";
 
-let fetchAllQa = async () => {
+let login = async () => {
   return await axios
-    .get("/api/qas/")
+    .post("/api/token/", {
+      username: "pg",
+      password: "pg",
+    })
+    // .then((res) => console.log(res))
+    .catch((err) => console.log(err));
+};
+
+let fetchAllQa = async (token) => {
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+  return await axios
+    .get("/api/qas/", { headers })
     .then((res) => console.log(res))
     .catch((err) => console.log(err));
 };
@@ -51,4 +64,4 @@ let deleteQa = async () => {
     .catch((err) => console.log(err));
 };
 
-export { fetchAllQa, addNewQa, updateQa, deleteQa };
+export { login, fetchAllQa, addNewQa, updateQa, deleteQa };
