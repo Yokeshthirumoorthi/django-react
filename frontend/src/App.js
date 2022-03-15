@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
-import { fetchAllQa } from "./server";
+import { fetchAllQa, addNewQa, updateQa, deleteQa } from "./server";
 
 function App() {
   useEffect(() => {
