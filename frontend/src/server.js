@@ -20,46 +20,55 @@ let fetchAllQa = async (token) => {
     .catch((err) => console.log(err));
 };
 
-let addNewQa = async () => {
+let addNewQa = async (token) => {
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
   const item = {
     question: "New Question",
     answer: "new answer",
   };
   return await axios
-    .post("/api/qas/", item)
+    .post("/api/qas/", item, { headers })
     .then((res) => {
       console.log(res);
-      fetchAllQa();
+      fetchAllQa(token);
     })
     .catch((err) => console.log(err));
 };
 
-let updateQa = async () => {
+let updateQa = async (token) => {
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
   const item = {
     id: "3",
     question: "New Quest",
     answer: "new ans",
   };
   return await axios
-    .put(`/api/qas/${item.id}/`, item)
+    .put(`/api/qas/${item.id}/`, item, { headers })
     .then((res) => {
       console.log(res);
-      fetchAllQa();
+      fetchAllQa(token);
     })
     .catch((err) => console.log(err));
 };
 
-let deleteQa = async () => {
+let deleteQa = async (token) => {
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
   const item = {
     id: "3",
     question: "New Quest",
     answer: "new ans",
   };
   return await axios
-    .delete(`/api/qas/${item.id}/`)
+    .delete(`/api/qas/${item.id}/`, { headers })
     .then((res) => {
       console.log(res);
-      fetchAllQa();
+      fetchAllQa(token);
     })
     .catch((err) => console.log(err));
 };
