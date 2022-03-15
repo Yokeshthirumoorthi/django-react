@@ -1,7 +1,14 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import logo from "./logo.svg";
+import "./App.css";
+
+import { fetchAllQa } from "./server";
 
 function App() {
+  useEffect(() => {
+    fetchAllQa();
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
