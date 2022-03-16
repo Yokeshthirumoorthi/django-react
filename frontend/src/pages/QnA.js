@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Disclosure } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/outline";
+import { ChevronDownIcon, SearchIcon } from "@heroicons/react/outline";
 import { fetchAllQa } from "../server";
 
 // const sampleData = [
@@ -28,8 +28,40 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+function QuickSearch({ searchTerm, setSearchTerm }) {
+  return (
+    <div>
+      <div className="mt-1 relative flex items-center">
+        <input
+          type="text"
+          placeholder="Enter a term to lookup on Questions"
+          name="search"
+          id="search"
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+          }}
+          className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md"
+        />
+        <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
+          <kbd className="inline-flex items-center border border-gray-200 rounded px-2 text-sm font-sans font-medium text-gray-400">
+            <SearchIcon className={"h-6 w-6"} aria-hidden="true" />
+          </kbd>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function QnA({ userAuthToken }) {
   const [data, setData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState([]);
+
+  const applySearch = (data, searchTerm) => {
+    if (searchTerm == "") return data;
+    const result = data.filter((item) => item.question.match(searchTerm));
+    return result;
+  };
 
   useEffect(() => {
     fetchAllQa(userAuthToken).then(setData);
@@ -43,7 +75,11 @@ export default function QnA({ userAuthToken }) {
             Questions And Answers
           </h2>
           <dl className="mt-6 space-y-6 divide-y divide-gray-200">
-            {data.map((item) => (
+            <QuickSearch
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+            />
+            {applySearch(data, searchTerm).map((item) => (
               <Disclosure as="div" key={item.question} className="pt-6">
                 {({ open }) => (
                   <>
