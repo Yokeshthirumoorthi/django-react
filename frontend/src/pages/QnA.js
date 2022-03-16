@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Disclosure } from "@headlessui/react";
 import { ChevronDownIcon, SearchIcon } from "@heroicons/react/outline";
-import { fetchAllQa } from "../server";
+import { fetchAllQa, addNewQa } from "../server";
+import AddNewModal from "../views/AddNewModal";
 
 // const sampleData = [
 //   {
@@ -54,6 +55,7 @@ function QuickSearch({ searchTerm, setSearchTerm }) {
 }
 
 export default function QnA({ userAuthToken }) {
+  const [openAddNewModal, setOpenAddNewModal] = useState(false);
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState([]);
 
@@ -61,6 +63,15 @@ export default function QnA({ userAuthToken }) {
     if (searchTerm == "") return data;
     const result = data.filter((item) => item.question.match(searchTerm));
     return result;
+  };
+
+  const createNewQnA = (question, answer) => {
+    if (question == "" || answer == "") return;
+    const data = { question, answer };
+    addNewQa(userAuthToken, data).then((resp) => {
+      console.log(resp);
+      resp && fetchAllQa(userAuthToken).then(setData);
+    });
   };
 
   useEffect(() => {
@@ -71,16 +82,34 @@ export default function QnA({ userAuthToken }) {
     <div className="bg-gray-50">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:py-16 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto divide-y-2 divide-gray-200">
-          <h2 className="text-center text-3xl font-extrabold text-gray-900 sm:text-4xl">
-            Questions And Answers
-          </h2>
           <dl className="mt-6 space-y-6 divide-y divide-gray-200">
+            <div className="flex items-center mt-2 justify-between">
+              <div className="max-w-xl">
+                <h2 className="text-center text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                  Questions And Answers
+                </h2>
+              </div>
+              <div className="mt-5 sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:flex sm:items-center">
+                <button
+                  type="button"
+                  onClick={(_) => setOpenAddNewModal(true)}
+                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
+                >
+                  Add New
+                </button>
+                <AddNewModal
+                  open={openAddNewModal}
+                  setOpen={setOpenAddNewModal}
+                  saveToServer={createNewQnA}
+                />
+              </div>
+            </div>
             <QuickSearch
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
             />
             {applySearch(data, searchTerm).map((item) => (
-              <Disclosure as="div" key={item.question} className="pt-6">
+              <Disclosure as="div" key={item.id} className="pt-6">
                 {({ open }) => (
                   <>
                     <dt className="text-lg">

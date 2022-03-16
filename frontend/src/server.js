@@ -23,20 +23,13 @@ let fetchAllQa = async (token) => {
     .catch((err) => console.log(err));
 };
 
-let addNewQa = async (token) => {
+let addNewQa = async (token, data) => {
   const headers = {
     Authorization: `Bearer ${token}`,
   };
-  const item = {
-    question: "New Question",
-    answer: "new answer",
-  };
   return await axios
-    .post("/api/qas/", item, { headers })
-    .then((res) => {
-      console.log(res);
-      fetchAllQa(token);
-    })
+    .post("/api/qas/", data, { headers })
+    .then((res) => res.status == 201)
     .catch((err) => console.log(err));
 };
 
