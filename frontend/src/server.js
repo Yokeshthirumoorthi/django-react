@@ -1,13 +1,14 @@
 import axios from "axios";
 
-let login = async () => {
+let login = async (username, password) => {
   return await axios
-    .post("/api/token/", {
-      username: "pg",
-      password: "pg",
+    .post("/api/token/", { username, password })
+    .then((res) => {
+      return res.data && res.data.access ? res.data.access : "";
     })
-    // .then((res) => console.log(res))
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log("Login Failed with error: ", err);
+    });
 };
 
 let fetchAllQa = async (token) => {
