@@ -3,26 +3,26 @@ import { Disclosure } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/outline";
 import { fetchAllQa } from "../server";
 
-const sampleData = [
-  {
-    id: 1,
-    question: "What's the best thing about Switzerland?",
-    answer:
-      "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
-  },
-  {
-    id: 2,
-    question: "What do you call someone with no body and no nose?",
-    answer:
-      "Nobody knows. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
-  },
-  {
-    id: 3,
-    question: "Why do you never see elephants hiding behind a tree?",
-    answer:
-      "Because they are so good at it. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
-  },
-];
+// const sampleData = [
+//   {
+//     id: 1,
+//     question: "What's the best thing about Switzerland?",
+//     answer:
+//       "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+//   },
+//   {
+//     id: 2,
+//     question: "What do you call someone with no body and no nose?",
+//     answer:
+//       "Nobody knows. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+//   },
+//   {
+//     id: 3,
+//     question: "Why do you never see elephants hiding behind a tree?",
+//     answer:
+//       "Because they are so good at it. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+//   },
+// ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -32,8 +32,7 @@ export default function QnA({ userAuthToken }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetchAllQa(userAuthToken).then((userData) => console.log(userData));
-    setData(sampleData);
+    fetchAllQa(userAuthToken).then(setData);
   }, []);
 
   return (

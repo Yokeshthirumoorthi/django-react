@@ -4,7 +4,9 @@ let login = async (username, password) => {
   return await axios
     .post("/api/token/", { username, password })
     .then((res) => {
-      return res.data && res.data.access ? res.data.access : "";
+      return res.status == 200 && res.data && res.data.access
+        ? res.data.access
+        : "";
     })
     .catch((err) => {
       console.log("Login Failed with error: ", err);
@@ -17,7 +19,7 @@ let fetchAllQa = async (token) => {
   };
   return await axios
     .get("/api/qas/", { headers })
-    .then((res) => console.log(res))
+    .then((res) => (res.status == 200 && res.data ? res.data : []))
     .catch((err) => console.log(err));
 };
 
