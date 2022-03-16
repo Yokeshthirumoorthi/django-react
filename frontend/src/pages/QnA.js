@@ -1,8 +1,9 @@
-/* This example requires Tailwind CSS v2.0+ */
+import React, { useEffect, useState } from "react";
 import { Disclosure } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/outline";
+import { fetchAllQa } from "../server";
 
-const data = [
+const sampleData = [
   {
     id: 1,
     question: "What's the best thing about Switzerland?",
@@ -27,7 +28,14 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function QnA() {
+export default function QnA({ userAuthToken }) {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetchAllQa(userAuthToken).then((userData) => console.log(userData));
+    setData(sampleData);
+  }, []);
+
   return (
     <div className="bg-gray-50">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:py-16 sm:px-6 lg:px-8">

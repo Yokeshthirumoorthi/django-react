@@ -1,20 +1,9 @@
 import React, { useState } from "react";
 import logo from "../logo.svg";
 
-import { login, fetchAllQa } from "../server";
-
-export default function Login() {
+export default function Login({ handleLogin, loginError, setLoginError }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loginError, setLoginError] = useState(false);
-
-  const handleLogin = () => {
-    login(username, password).then((token) =>
-      token
-        ? fetchAllQa(token)
-        : setLoginError("Login Failed. Invalid Username / Password")
-    );
-  };
 
   return (
     <>
@@ -81,7 +70,7 @@ export default function Login() {
               <div>
                 <button
                   type="button"
-                  onClick={handleLogin}
+                  onClick={(_) => handleLogin(username, password)}
                   className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   Sign in
