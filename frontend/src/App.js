@@ -1,36 +1,26 @@
 import React, { useState } from "react";
-import "./App.css";
-
 import Login from "./pages/Login";
 import QnA from "./pages/QnA";
+import * as Server from "./server";
 
-import { login } from "./server";
-
-function App() {
-  const [loginError, setLoginError] = useState(false);
+export default function App() {
+  const [loginError, setLoginError] = useState("");
   const [userAuthToken, setUserAuthToken] = useState("");
 
-  const handleLogin = (username, password) => {
-    login(username, password).then((token) =>
-      token
-        ? setUserAuthToken(token)
-        : setLoginError("Login Failed. Invalid Username / Password")
-    );
+  const handleLogin = async (username, password) => {
+    const LOGIN_FAILURE_MSG = "Login Failed. Invalid Username / Password";
+    const token = await Server.login(username, password);
+    token ? setUserAuthToken(token) : setLoginError(LOGIN_FAILURE_MSG);
   };
 
-  return (
-    <div className="App">
-      {userAuthToken != "" ? (
-        <QnA userAuthToken={userAuthToken} />
-      ) : (
-        <Login
-          handleLogin={handleLogin}
-          loginError={loginError}
-          setLoginError={setLoginError}
-        />
-      )}
-    </div>
-  );
-}
+  if (userAuthToken == "")
+    return (
+      <Login
+        handleLogin={handleLogin}
+        loginError={loginError}
+        setLoginError={setLoginError}
+      />
+    );
 
-export default App;
+  return <QnA userAuthToken={userAuthToken} />;
+}
