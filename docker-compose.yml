@@ -1,8 +1,9 @@
 version: "3.4"
 
 services:
-  web:
+  webserver:
     build: ./backend
+    container_name: webserver
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./backend/:/usr/src/app/
@@ -24,12 +25,23 @@ services:
 
   db:
     image: postgres:13.0-alpine
+    container_name: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_USER=django_react
-      - POSTGRES_PASSWORD=django_react
-      - POSTGRES_DB=django_react_dev
+    env_file:
+      - ./.env.dev
+
+  website:
+    image: node:14
+    container_name: website
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/usr/src/service
+    working_dir: /usr/src/service/
+    command: npm start
+    depends_on:
+      - webserver
 
 volumes:
   postgres_data:

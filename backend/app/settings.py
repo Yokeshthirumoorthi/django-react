@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get(
 DEBUG = int(os.environ.get("DEBUG", default=True))
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["webserver", "localhost"]
 # ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 # Application definition
