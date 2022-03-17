@@ -8,6 +8,8 @@ User = get_user_model()
 
 class Qaapp(models.Model):
     user = models.ForeignKey(User, models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    critical = models.BooleanField(default=False)
     question = models.TextField()
     answer = models.TextField()
 

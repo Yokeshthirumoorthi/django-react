@@ -25,10 +25,43 @@ function TextArea({ label, placeholder, value, onValueChange }) {
   );
 }
 
+function CriticalMarker({ critical, setCritical }) {
+  return (
+    <div className="relative flex items-start">
+      <div className="flex items-center h-5">
+        <input
+          id="comments"
+          aria-describedby="comments-description"
+          name="comments"
+          type="checkbox"
+          checked={critical}
+          onChange={(e) => setCritical(e.target.checked)}
+          className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+        />
+      </div>
+      <div className="ml-3 text-sm">
+        <label htmlFor="comments" className="font-medium text-gray-700">
+          Critical
+        </label>
+        <p id="comments-description" className="text-gray-500">
+          Mark this as critical if this is an important question.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function AddNewModal({ open, setOpen, saveToServer }) {
   const cancelButtonRef = useRef(null);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+  const [critical, setCritical] = useState(false);
+
+  const resetValues = () => {
+    setQuestion("");
+    setAnswer("");
+    setCritical(false);
+  };
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -78,6 +111,10 @@ export default function AddNewModal({ open, setOpen, saveToServer }) {
                   </Dialog.Title>
                 </div>
                 <div className="mt-2">
+                  <CriticalMarker
+                    critical={critical}
+                    setCritical={setCritical}
+                  />
                   <TextArea
                     label={"Question"}
                     placeholder={"Write your question here"}
@@ -97,8 +134,9 @@ export default function AddNewModal({ open, setOpen, saveToServer }) {
                   type="button"
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm"
                   onClick={() => {
-                    saveToServer(question, answer);
+                    saveToServer(question, answer, critical);
                     setOpen(false);
+                    resetValues();
                   }}
                 >
                   Save

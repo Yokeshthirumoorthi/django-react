@@ -60,6 +60,19 @@ function QuickSearch({ searchTerm, setSearchTerm }) {
   );
 }
 
+function CriticalBadge({ isCritical }) {
+  return (
+    <span
+      className={classNames(
+        isCritical ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800",
+        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+      )}
+    >
+      {isCritical ? "Critical" : "Not Critical"}
+    </span>
+  );
+}
+
 function QnAItem({ item }) {
   return (
     <Disclosure as="div" className="pt-6">
@@ -67,7 +80,10 @@ function QnAItem({ item }) {
         <>
           <dt className="text-lg">
             <Disclosure.Button className="text-left w-full flex justify-between items-start text-gray-400">
-              <span className="font-medium text-gray-900">{item.question}</span>
+              <span className="font-medium text-gray-900">
+                {item.question}
+                <CriticalBadge isCritical={item.critical} />
+              </span>
               <span className="ml-6 h-7 flex items-center">
                 <ChevronDownIcon
                   className={classNames(
@@ -136,10 +152,10 @@ function EmptyQnAContent() {
 
 export default function QnA({ userAuthToken }) {
   const [data, setData] = useState([]);
-  const createNewQnA = async (question, answer) => {
+  const createNewQnA = async (question, answer, critical) => {
     if (question == "" || answer == "") return;
 
-    const data = { question, answer };
+    const data = { question, answer, critical };
     const createDataResponse = await Server.addNewQa(userAuthToken, data);
 
     if (createDataResponse) {

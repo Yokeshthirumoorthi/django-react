@@ -1,32 +1,36 @@
 import axios from "axios";
 
 let login = async (username, password) => {
-  const loginResponse = await axios
+  return await axios
     .post("/api/token/", { username, password })
+    .then((loginResponse) => {
+      const isLoginSuccess = loginResponse.status == 200 && loginResponse.data;
+      const userToken = isLoginSuccess ? loginResponse.data.access : "";
+      return userToken;
+    })
     .catch((err) => {
       console.log("Login Failed with error: ", err);
     });
-
-  const isLoginSuccess = loginResponse.status == 200 && loginResponse.data;
-  const userToken = isLoginSuccess ? loginResponse.data.access : "";
-  return userToken;
 };
 
 let fetchAllQa = async (token) => {
   const headers = { Authorization: `Bearer ${token}` };
-  const fetchQAResponse = await axios
+  return await axios
     .get("/api/qas/", { headers })
+    .then((fetchQAResponse) => {
+      const isFetchSuccess =
+        fetchQAResponse.status == 200 && fetchQAResponse.data;
+      return isFetchSuccess ? fetchQAResponse.data : [];
+    })
     .catch((err) => console.log(err));
-  const isFetchSuccess = fetchQAResponse.status == 200 && fetchQAResponse.data;
-  return isFetchSuccess ? fetchQAResponse.data : [];
 };
 
 let addNewQa = async (token, data) => {
   const headers = { Authorization: `Bearer ${token}` };
-  const addQAResponse = await axios
+  return await axios
     .post("/api/qas/", data, { headers })
+    .then((addQAResponse) => addQAResponse.status == 201)
     .catch((err) => console.log(err));
-  return addQAResponse.status == 201;
 };
 
 // let updateQa = async (token) => {
