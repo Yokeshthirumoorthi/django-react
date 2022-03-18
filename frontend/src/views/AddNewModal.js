@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
 function TextArea({ label, placeholder, value, onValueChange }) {
@@ -54,12 +54,24 @@ function CriticalMarkerChkBox({ critical, setCritical }) {
 function AddNewQAForm({ setOpen, saveToServer }) {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const [critical, setCritical] = useState(false);
 
   const resetValues = () => {
     setQuestion("");
     setAnswer("");
     setCritical(false);
+  };
+
+  const handleSave = () => {
+    if (question == "" || answer == "") {
+      setErrorMsg("Question and Answer cannot be empty");
+      return;
+    }
+
+    saveToServer(question, answer, critical);
+    setOpen(false);
+    resetValues();
   };
 
   return (
@@ -70,24 +82,29 @@ function AddNewQAForm({ setOpen, saveToServer }) {
           label={"Question"}
           placeholder={"Write your question here"}
           value={question}
-          onValueChange={setQuestion}
+          onValueChange={(value) => {
+            setErrorMsg("");
+            setQuestion(value);
+          }}
         />
         <TextArea
           label={"Answer"}
           placeholder={"Write your answer here"}
           value={answer}
-          onValueChange={setAnswer}
+          onValueChange={(value) => {
+            setErrorMsg("");
+            setAnswer(value);
+          }}
         />
       </div>
+      {errorMsg != "" && (
+        <p className="mt-2 text-center text-sm text-red-600">{errorMsg}</p>
+      )}
       <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
         <button
           type="button"
           className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm"
-          onClick={() => {
-            saveToServer(question, answer, critical);
-            setOpen(false);
-            resetValues();
-          }}
+          onClick={handleSave}
         >
           Save
         </button>
