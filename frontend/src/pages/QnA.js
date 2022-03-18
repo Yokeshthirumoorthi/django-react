@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Disclosure } from "@headlessui/react";
-import { ChevronDownIcon, SearchIcon } from "@heroicons/react/outline";
+import {
+  ChevronDownIcon,
+  SearchIcon,
+  TrashIcon,
+} from "@heroicons/react/outline";
 import * as Server from "../server";
 import AddNewModal from "../views/AddNewModal";
 
@@ -73,7 +77,7 @@ function CriticalBadge({ isCritical }) {
   );
 }
 
-function QnAItem({ item }) {
+function QnAItem({ item, deleteQnA }) {
   return (
     <Disclosure as="div" className="pt-6">
       {({ open }) => (
@@ -96,7 +100,24 @@ function QnAItem({ item }) {
             </Disclosure.Button>
           </dt>
           <Disclosure.Panel as="dd" className="mt-2 pr-12">
-            <p className="text-base text-gray-500">{item.answer}</p>
+            <div className="flex items-center justify-between flex-wrap">
+              <div className="w-0 flex-1 flex items-center">
+                <p className="ml-3 font-medium text-base text-gray-500">
+                  {item.answer}
+                </p>
+              </div>
+              <div className="order-3 mt-2 ml-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
+                <button
+                  type="button"
+                  onClick={(_) => deleteQnA(item)}
+                  className="flex items-center justify-center px-4 py-2 border border-1 rounded-md shadow-sm text-sm font-medium text-red-600 bg-white hover:bg-red-50"
+                >
+                  <TrashIcon className={"h-5 w-5"} aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+
+            {/* <p className="text-base text-gray-500">{item.answer}</p> */}
           </Disclosure.Panel>
         </>
       )}
@@ -111,14 +132,14 @@ export const applySearch = (data, searchTerm) => {
   );
 };
 
-function QnAContent({ data }) {
+function QnAContent({ data, deleteQnA }) {
   const [searchTerm, setSearchTerm] = useState("");
 
   return (
     <>
       <QuickSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       {applySearch(data, searchTerm).map((item) => (
-        <QnAItem key={item.id} item={item} />
+        <QnAItem key={item.id} item={item} deleteQnA={deleteQnA} />
       ))}
     </>
   );
@@ -166,6 +187,17 @@ export default function QnA({ userAuthToken }) {
     }
   };
 
+  const deleteQnA = async (item) => {
+    if (item.id == "") return;
+
+    const deleteDataResponse = await Server.deleteQa(userAuthToken, item);
+
+    if (deleteDataResponse) {
+      const refreshedData = await Server.fetchAllQa(userAuthToken);
+      setData(refreshedData);
+    }
+  };
+
   useEffect(() => {
     Server.fetchAllQa(userAuthToken).then(setData);
   }, []);
@@ -178,7 +210,7 @@ export default function QnA({ userAuthToken }) {
       <div className="max-w-3xl mx-auto divide-y-2 divide-gray-200">
         <dl className="mt-6 space-y-6 divide-y divide-gray-200">
           {data.length == 0 && <EmptyQnAContent />}
-          {data.length > 0 && <QnAContent data={data} />}
+          {data.length > 0 && <QnAContent data={data} deleteQnA={deleteQnA} />}
         </dl>
       </div>
     </div>

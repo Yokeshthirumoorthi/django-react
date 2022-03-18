@@ -51,22 +51,12 @@ let addNewQa = async (token, data) => {
 //     .catch((err) => console.log(err));
 // };
 
-// let deleteQa = async (token) => {
-//   const headers = {
-//     Authorization: `Bearer ${token}`,
-//   };
-//   const item = {
-//     id: "3",
-//     question: "New Quest",
-//     answer: "new ans",
-//   };
-//   return await axios
-//     .delete(`/api/qas/${item.id}/`, { headers })
-//     .then((res) => {
-//       console.log(res);
-//       fetchAllQa(token);
-//     })
-//     .catch((err) => console.log(err));
-// };
+let deleteQa = async (token, item) => {
+  const headers = { Authorization: `Bearer ${token}` };
+  return await axios
+    .delete(`/api/qas/${item.id}/`, { headers })
+    .then((res) => res.status == 204)
+    .catch((err) => console.log(err));
+};
 
-export { login, fetchAllQa, addNewQa };
+export { login, fetchAllQa, addNewQa, deleteQa };
