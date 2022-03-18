@@ -51,7 +51,7 @@ function CriticalMarkerChkBox({ critical, setCritical }) {
   );
 }
 
-function AddNewQAForm({ setOpen, saveToServer }) {
+export function AddNewQAForm({ setOpen, saveToServer }) {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
