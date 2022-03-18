@@ -109,7 +109,9 @@ function QnAContent({ data }) {
 
   const applySearch = (data, searchTerm) => {
     if (searchTerm == "") return data;
-    return data.filter((item) => item.question.match(searchTerm));
+    return data.filter(
+      (item) => item.question.match(searchTerm) || item.answer.match(searchTerm)
+    );
   };
 
   return (
