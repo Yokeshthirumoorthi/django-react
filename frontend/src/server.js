@@ -33,23 +33,13 @@ let addNewQa = async (token, data) => {
     .catch((err) => console.log(err));
 };
 
-// let updateQa = async (token) => {
-//   const headers = {
-//     Authorization: `Bearer ${token}`,
-//   };
-//   const item = {
-//     id: "3",
-//     question: "New Quest",
-//     answer: "new ans",
-//   };
-//   return await axios
-//     .put(`/api/qas/${item.id}/`, item, { headers })
-//     .then((res) => {
-//       console.log(res);
-//       fetchAllQa(token);
-//     })
-//     .catch((err) => console.log(err));
-// };
+let updateQa = async (token, item) => {
+  const headers = { Authorization: `Bearer ${token}` };
+  return await axios
+    .put(`/api/qas/${item.id}/`, item, { headers })
+    .then((res) => res.status == 200)
+    .catch((err) => console.log(err));
+};
 
 let deleteQa = async (token, item) => {
   const headers = { Authorization: `Bearer ${token}` };
@@ -59,4 +49,4 @@ let deleteQa = async (token, item) => {
     .catch((err) => console.log(err));
 };
 
-export { login, fetchAllQa, addNewQa, deleteQa };
+export { login, fetchAllQa, addNewQa, deleteQa, updateQa };

@@ -4,6 +4,7 @@ import {
   ChevronDownIcon,
   SearchIcon,
   TrashIcon,
+  PencilAltIcon,
 } from "@heroicons/react/outline";
 import * as Server from "../server";
 import AddNewModal from "../views/AddNewModal";
@@ -32,6 +33,7 @@ function Header({ createNewQnA }) {
         <AddNewModal
           open={openAddNewModal}
           setOpen={setOpenAddNewModal}
+          item={{ id: "", question: "", answer: "", critical: false }}
           saveToServer={createNewQnA}
         />
       </div>
@@ -77,7 +79,8 @@ function CriticalBadge({ isCritical }) {
   );
 }
 
-function QnAItem({ item, deleteQnA }) {
+function QnAItem({ item, updateQnA, deleteQnA }) {
+  const [openAddNewModal, setOpenAddNewModal] = useState(false);
   return (
     <Disclosure as="div" className="pt-6">
       {({ open }) => (
@@ -106,6 +109,21 @@ function QnAItem({ item, deleteQnA }) {
                   {item.answer}
                 </p>
               </div>
+              <div className="order-3 mt-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
+                <button
+                  type="button"
+                  onClick={(_) => setOpenAddNewModal(true)}
+                  className="flex items-center justify-center px-4 py-2 border border-1 rounded-md shadow-sm text-sm font-medium text-grey-600 bg-white hover:bg-red-50"
+                >
+                  <PencilAltIcon className={"h-5 w-5"} aria-hidden="true" />
+                </button>
+                <AddNewModal
+                  open={openAddNewModal}
+                  item={item}
+                  setOpen={setOpenAddNewModal}
+                  saveToServer={updateQnA}
+                />
+              </div>
               <div className="order-3 mt-2 ml-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
                 <button
                   type="button"
@@ -116,8 +134,6 @@ function QnAItem({ item, deleteQnA }) {
                 </button>
               </div>
             </div>
-
-            {/* <p className="text-base text-gray-500">{item.answer}</p> */}
           </Disclosure.Panel>
         </>
       )}
@@ -132,14 +148,19 @@ export const applySearch = (data, searchTerm) => {
   );
 };
 
-function QnAContent({ data, deleteQnA }) {
+function QnAContent({ data, updateQnA, deleteQnA }) {
   const [searchTerm, setSearchTerm] = useState("");
 
   return (
     <>
       <QuickSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       {applySearch(data, searchTerm).map((item) => (
-        <QnAItem key={item.id} item={item} deleteQnA={deleteQnA} />
+        <QnAItem
+          key={item.id}
+          item={item}
+          updateQnA={updateQnA}
+          deleteQnA={deleteQnA}
+        />
       ))}
     </>
   );
@@ -175,12 +196,8 @@ function EmptyQnAContent() {
 
 export default function QnA({ userAuthToken }) {
   const [data, setData] = useState([]);
-  const createNewQnA = async (question, answer, critical) => {
-    if (question == "" || answer == "") return;
-
-    const data = { question, answer, critical };
-    const createDataResponse = await Server.addNewQa(userAuthToken, data);
-
+  const createNewQnA = async (item) => {
+    const createDataResponse = await Server.addNewQa(userAuthToken, item);
     if (createDataResponse) {
       const refreshedData = await Server.fetchAllQa(userAuthToken);
       setData(refreshedData);
@@ -198,6 +215,17 @@ export default function QnA({ userAuthToken }) {
     }
   };
 
+  const updateQnA = async (item) => {
+    if (item.id == "") return;
+
+    const updateDataResponse = await Server.updateQa(userAuthToken, item);
+
+    if (updateDataResponse) {
+      const refreshedData = await Server.fetchAllQa(userAuthToken);
+      setData(refreshedData);
+    }
+  };
+
   useEffect(() => {
     Server.fetchAllQa(userAuthToken).then(setData);
   }, []);
@@ -210,7 +238,13 @@ export default function QnA({ userAuthToken }) {
       <div className="max-w-3xl mx-auto divide-y-2 divide-gray-200">
         <dl className="mt-6 space-y-6 divide-y divide-gray-200">
           {data.length == 0 && <EmptyQnAContent />}
-          {data.length > 0 && <QnAContent data={data} deleteQnA={deleteQnA} />}
+          {data.length > 0 && (
+            <QnAContent
+              data={data}
+              deleteQnA={deleteQnA}
+              updateQnA={updateQnA}
+            />
+          )}
         </dl>
       </div>
     </div>

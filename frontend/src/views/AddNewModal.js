@@ -51,11 +51,11 @@ function CriticalMarkerChkBox({ critical, setCritical }) {
   );
 }
 
-export function AddNewQAForm({ setOpen, saveToServer }) {
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
+export function AddNewQAForm({ setOpen, item, saveToServer }) {
+  const [question, setQuestion] = useState(item.question);
+  const [answer, setAnswer] = useState(item.answer);
   const [errorMsg, setErrorMsg] = useState("");
-  const [critical, setCritical] = useState(false);
+  const [critical, setCritical] = useState(item.critical);
 
   const resetValues = () => {
     setQuestion("");
@@ -69,7 +69,8 @@ export function AddNewQAForm({ setOpen, saveToServer }) {
       return;
     }
 
-    saveToServer(question, answer, critical);
+    const data = { id: item.id, question, answer, critical };
+    saveToServer(data);
     setOpen(false);
     resetValues();
   };
@@ -120,7 +121,7 @@ export function AddNewQAForm({ setOpen, saveToServer }) {
   );
 }
 
-export default function AddNewModal({ open, setOpen, saveToServer }) {
+export default function AddNewModal({ open, item, setOpen, saveToServer }) {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
@@ -167,7 +168,11 @@ export default function AddNewModal({ open, setOpen, saveToServer }) {
                     Add New Question And Answer
                   </Dialog.Title>
                 </div>
-                <AddNewQAForm setOpen={setOpen} saveToServer={saveToServer} />
+                <AddNewQAForm
+                  setOpen={setOpen}
+                  item={item}
+                  saveToServer={saveToServer}
+                />
               </div>
             </div>
           </Transition.Child>
