@@ -26,7 +26,19 @@ Create a user with the following command. This user is used to login in website
 make user
 ```
 
-Now visit http://localhost:3000
+Now visit http://localhost:3000 and login with the new user credentials.
+
+### Checking Database
+
+Visit http://localhost:8082 and use the following credentials to login to database.
+
+```
+System  :   PostgresSQL
+Server  :   db
+Username:   django_react
+Paswword:   django_react
+Database:   django_react_dev
+```
 
 ## Author
 
