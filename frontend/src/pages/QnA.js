@@ -104,15 +104,15 @@ function QnAItem({ item }) {
   );
 }
 
+export const applySearch = (data, searchTerm) => {
+  if (searchTerm == "") return data;
+  return data.filter(
+    (item) => item.question.match(searchTerm) || item.answer.match(searchTerm)
+  );
+};
+
 function QnAContent({ data }) {
   const [searchTerm, setSearchTerm] = useState("");
-
-  const applySearch = (data, searchTerm) => {
-    if (searchTerm == "") return data;
-    return data.filter(
-      (item) => item.question.match(searchTerm) || item.answer.match(searchTerm)
-    );
-  };
 
   return (
     <>
