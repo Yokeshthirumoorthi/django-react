@@ -4,7 +4,7 @@ from .models import Qaapp
 from .serializers import QaappSerializer
 
 
-class ContactViewSet(viewsets.ModelViewSet):
+class QAViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Qaapp.objects.order_by("id")
     serializer_class = QaappSerializer

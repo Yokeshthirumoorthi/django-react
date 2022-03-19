@@ -6,7 +6,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from .views import QaappView
-from .viewsets import ContactViewSet
+from .viewsets import QAViewSet
 
 urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -15,5 +15,5 @@ urlpatterns = [
 ]
 
 router = DefaultRouter()
-router.register(r'qas', ContactViewSet)
+router.register(r'qas', QAViewSet)
 urlpatterns += router.urls
