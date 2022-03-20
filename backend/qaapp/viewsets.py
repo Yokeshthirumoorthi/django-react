@@ -12,7 +12,8 @@ class QAViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         qs = super().get_queryset()
 
-        # Get only qa about current authenticated user
-        qs = qs.filter(user=self.request.user)
+        # Get only qa of group where the user belongs to.
+        if not self.request.user.is_superuser:
+            qs = qs.filter(group__in=self.request.user.groups.all())
 
         return qs
