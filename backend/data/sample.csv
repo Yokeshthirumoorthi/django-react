@@ -1,0 +1,5 @@
+User,Group,Critical,Question,Answer
+2,1,False,tech_user1 has a question, tech_user1 has an answer
+3,1,True,tech_user2 has a question, tech_user2 has an answer
+4,2,False,fin_user1 has a question, fin_user1 has an answer
+5,2,False,fin_user2 has a question, fin_user2 has an answer
