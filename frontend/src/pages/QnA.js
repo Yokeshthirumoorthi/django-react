@@ -79,8 +79,40 @@ function CriticalBadge({ isCritical }) {
   );
 }
 
-function QnAItem({ item, updateQnA, deleteQnA }) {
+// Update UpdateDeleteBtns is not used currently. Waiting to add Updated_by and Updated_at fields in the server.
+function UpdateDeleteBtns({ item, updateQnA, deleteQnA }) {
   const [openAddNewModal, setOpenAddNewModal] = useState(false);
+  return (
+    <>
+      <div className="order-3 mt-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
+        <button
+          type="button"
+          onClick={(_) => setOpenAddNewModal(true)}
+          className="flex items-center justify-center px-4 py-2 border border-1 rounded-md shadow-sm text-sm font-medium text-grey-600 bg-white hover:bg-red-50"
+        >
+          <PencilAltIcon className={"h-5 w-5"} aria-hidden="true" />
+        </button>
+        <AddNewModal
+          open={openAddNewModal}
+          item={item}
+          setOpen={setOpenAddNewModal}
+          saveToServer={updateQnA}
+        />
+      </div>
+      <div className="order-3 mt-2 ml-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
+        <button
+          type="button"
+          onClick={(_) => deleteQnA(item)}
+          className="flex items-center justify-center px-4 py-2 border border-1 rounded-md shadow-sm text-sm font-medium text-red-600 bg-white hover:bg-red-50"
+        >
+          <TrashIcon className={"h-5 w-5"} aria-hidden="true" />
+        </button>
+      </div>{" "}
+    </>
+  );
+}
+
+function QnAItem({ item, updateQnA, deleteQnA }) {
   return (
     <Disclosure as="div" className="pt-6">
       {({ open }) => (
@@ -109,30 +141,11 @@ function QnAItem({ item, updateQnA, deleteQnA }) {
                   {item.answer}
                 </p>
               </div>
-              <div className="order-3 mt-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
-                <button
-                  type="button"
-                  onClick={(_) => setOpenAddNewModal(true)}
-                  className="flex items-center justify-center px-4 py-2 border border-1 rounded-md shadow-sm text-sm font-medium text-grey-600 bg-white hover:bg-red-50"
-                >
-                  <PencilAltIcon className={"h-5 w-5"} aria-hidden="true" />
-                </button>
-                <AddNewModal
-                  open={openAddNewModal}
-                  item={item}
-                  setOpen={setOpenAddNewModal}
-                  saveToServer={updateQnA}
-                />
-              </div>
-              <div className="order-3 mt-2 ml-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
-                <button
-                  type="button"
-                  onClick={(_) => deleteQnA(item)}
-                  className="flex items-center justify-center px-4 py-2 border border-1 rounded-md shadow-sm text-sm font-medium text-red-600 bg-white hover:bg-red-50"
-                >
-                  <TrashIcon className={"h-5 w-5"} aria-hidden="true" />
-                </button>
-              </div>
+              {/* <UpdateDeleteBtns
+                item={item}
+                updateQnA={updateQnA}
+                deleteQnA={deleteQnA}
+              /> */}
             </div>
           </Disclosure.Panel>
         </>
