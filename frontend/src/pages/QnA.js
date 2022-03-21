@@ -207,10 +207,12 @@ function EmptyQnAContent() {
   );
 }
 
-export default function QnA({ userAuthToken }) {
+export default function QnA({ userAuthToken, user }) {
   const [data, setData] = useState([]);
   const createNewQnA = async (item) => {
-    const createDataResponse = await Server.addNewQa(userAuthToken, item);
+    // append relevent groupid to item
+    const data = { group: user.group, ...item };
+    const createDataResponse = await Server.addNewQa(userAuthToken, data);
     if (createDataResponse) {
       const refreshedData = await Server.fetchAllQa(userAuthToken);
       setData(refreshedData);
@@ -220,7 +222,9 @@ export default function QnA({ userAuthToken }) {
   const deleteQnA = async (item) => {
     if (item.id == "") return;
 
-    const deleteDataResponse = await Server.deleteQa(userAuthToken, item);
+    // append relevent groupid to item
+    const data = { group: user.group, ...item };
+    const deleteDataResponse = await Server.deleteQa(userAuthToken, data);
 
     if (deleteDataResponse) {
       const refreshedData = await Server.fetchAllQa(userAuthToken);
@@ -231,7 +235,9 @@ export default function QnA({ userAuthToken }) {
   const updateQnA = async (item) => {
     if (item.id == "") return;
 
-    const updateDataResponse = await Server.updateQa(userAuthToken, item);
+    // append relevent groupid to item
+    const data = { group: user.group, ...item };
+    const updateDataResponse = await Server.updateQa(userAuthToken, data);
 
     if (updateDataResponse) {
       const refreshedData = await Server.fetchAllQa(userAuthToken);

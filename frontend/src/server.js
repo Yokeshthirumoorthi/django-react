@@ -13,6 +13,17 @@ let login = async (username, password) => {
     });
 };
 
+let fetchuser = async (token) => {
+  const headers = { Authorization: `Bearer ${token}` };
+  return await axios
+    .get("/api/owner/", { headers })
+    .then((response) => {
+      const isFetchSuccess = response.status == 200 && response.data;
+      return isFetchSuccess ? response.data : [];
+    })
+    .catch((err) => console.log(err));
+};
+
 let fetchAllQa = async (token) => {
   const headers = { Authorization: `Bearer ${token}` };
   return await axios
@@ -49,4 +60,4 @@ let deleteQa = async (token, item) => {
     .catch((err) => console.log(err));
 };
 
-export { login, fetchAllQa, addNewQa, deleteQa, updateQa };
+export { login, fetchuser, fetchAllQa, addNewQa, deleteQa, updateQa };
