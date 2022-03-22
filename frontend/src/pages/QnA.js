@@ -14,8 +14,42 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function Header({ createNewQnA }) {
+function AddNewQAButton({ createNewQnA }) {
   const [openAddNewModal, setOpenAddNewModal] = useState(false);
+  return (
+    <div className="mt-5 sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:flex sm:items-center">
+      <button
+        type="button"
+        onClick={(_) => setOpenAddNewModal(true)}
+        className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
+      >
+        Add New
+      </button>
+      <AddNewModal
+        open={openAddNewModal}
+        setOpen={setOpenAddNewModal}
+        item={{ id: "", question: "", answer: "", critical: false }}
+        saveToServer={createNewQnA}
+      />
+    </div>
+  );
+}
+
+function LogoutButton({ handleLogout }) {
+  return (
+    <div className="mt-5 sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:flex sm:items-center">
+      <button
+        type="button"
+        onClick={handleLogout}
+        className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm"
+      >
+        Logout
+      </button>
+    </div>
+  );
+}
+
+function Header({ createNewQnA, isAdmin, handleLogout }) {
   return (
     <div className="flex items-center mt-2 justify-between">
       <div className="max-w-xl">
@@ -23,21 +57,8 @@ function Header({ createNewQnA }) {
           Questions And Answers
         </h2>
       </div>
-      <div className="mt-5 sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:flex sm:items-center">
-        <button
-          type="button"
-          onClick={(_) => setOpenAddNewModal(true)}
-          className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
-        >
-          Add New
-        </button>
-        <AddNewModal
-          open={openAddNewModal}
-          setOpen={setOpenAddNewModal}
-          item={{ id: "", question: "", answer: "", critical: false }}
-          saveToServer={createNewQnA}
-        />
-      </div>
+      {!isAdmin && <AddNewQAButton createNewQnA={createNewQnA} />}
+      <LogoutButton handleLogout={handleLogout} />
     </div>
   );
 }
@@ -112,7 +133,7 @@ function UpdateDeleteBtns({ item, updateQnA, deleteQnA }) {
   );
 }
 
-function QnAItem({ item, updateQnA, deleteQnA }) {
+function QnAItem({ item, updateQnA, deleteQnA, isAdmin }) {
   return (
     <Disclosure as="div" className="pt-6">
       {({ open }) => (
@@ -141,11 +162,13 @@ function QnAItem({ item, updateQnA, deleteQnA }) {
                   {item.answer}
                 </p>
               </div>
-              <UpdateDeleteBtns
-                item={item}
-                updateQnA={updateQnA}
-                deleteQnA={deleteQnA}
-              />
+              {!isAdmin && (
+                <UpdateDeleteBtns
+                  item={item}
+                  updateQnA={updateQnA}
+                  deleteQnA={deleteQnA}
+                />
+              )}
             </div>
           </Disclosure.Panel>
         </>
@@ -161,7 +184,7 @@ export const applySearch = (data, searchTerm) => {
   );
 };
 
-function QnAContent({ data, updateQnA, deleteQnA }) {
+function QnAContent({ data, updateQnA, deleteQnA, isAdmin }) {
   const [searchTerm, setSearchTerm] = useState("");
 
   return (
@@ -173,6 +196,7 @@ function QnAContent({ data, updateQnA, deleteQnA }) {
           item={item}
           updateQnA={updateQnA}
           deleteQnA={deleteQnA}
+          isAdmin={isAdmin}
         />
       ))}
     </>
@@ -207,7 +231,7 @@ function EmptyQnAContent() {
   );
 }
 
-export default function QnA({ userAuthToken, user }) {
+export default function QnA({ userAuthToken, user, handleLogout }) {
   const [data, setData] = useState([]);
   const createNewQnA = async (item) => {
     // append relevent groupid to item
@@ -257,7 +281,11 @@ export default function QnA({ userAuthToken, user }) {
   return (
     <div className="max-w-7xl mx-auto py-12 px-4 sm:py-16 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto divide-y-2 divide-gray-200">
-        <Header createNewQnA={createNewQnA} />
+        <Header
+          createNewQnA={createNewQnA}
+          isAdmin={user.is_superuser}
+          handleLogout={handleLogout}
+        />
       </div>
       <div className="max-w-3xl mx-auto divide-y-2 divide-gray-200">
         <dl className="mt-6 space-y-6 divide-y divide-gray-200">
@@ -265,6 +293,7 @@ export default function QnA({ userAuthToken, user }) {
           {data.length > 0 && (
             <QnAContent
               data={data}
+              isAdmin={user.is_superuser}
               deleteQnA={deleteQnA}
               updateQnA={updateQnA}
             />

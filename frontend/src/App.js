@@ -12,6 +12,15 @@ export default function App() {
     group: "",
   });
 
+  const handleLogout = () => {
+    setUserAuthToken("");
+    setUser({
+      id: 0,
+      is_superuser: false,
+      group: "",
+    });
+  };
+
   const handleLogin = async (username, password) => {
     const LOGIN_FAILURE_MSG = "Login Failed. Invalid Username / Password";
     const token = await Server.login(username, password);
@@ -37,5 +46,11 @@ export default function App() {
       />
     );
 
-  return <QnA userAuthToken={userAuthToken} user={user} />;
+  return (
+    <QnA
+      userAuthToken={userAuthToken}
+      user={user}
+      handleLogout={handleLogout}
+    />
+  );
 }
