@@ -8,6 +8,7 @@ import {
 } from "@heroicons/react/outline";
 import * as Server from "../server";
 import AddNewModal from "../views/AddNewModal";
+import moment from "moment";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -141,11 +142,11 @@ function QnAItem({ item, updateQnA, deleteQnA }) {
                   {item.answer}
                 </p>
               </div>
-              {/* <UpdateDeleteBtns
+              <UpdateDeleteBtns
                 item={item}
                 updateQnA={updateQnA}
                 deleteQnA={deleteQnA}
-              /> */}
+              />
             </div>
           </Disclosure.Panel>
         </>
@@ -236,7 +237,12 @@ export default function QnA({ userAuthToken, user }) {
     if (item.id == "") return;
 
     // append relevent groupid to item
-    const data = { group: user.group, ...item };
+    const data = {
+      group: user.group,
+      updated_by: user.id,
+      updated_at: moment().format(),
+      ...item,
+    };
     const updateDataResponse = await Server.updateQa(userAuthToken, data);
 
     if (updateDataResponse) {

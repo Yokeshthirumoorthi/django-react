@@ -7,6 +7,7 @@ export default function App() {
   const [loginError, setLoginError] = useState("");
   const [userAuthToken, setUserAuthToken] = useState("");
   const [user, setUser] = useState({
+    id: 0, // 0 is a non-realistic userid, used only for initialization
     is_superuser: false,
     group: "",
   });
@@ -20,13 +21,14 @@ export default function App() {
     // And if the user is a superuser, expect no groupId
     user && user.groups
       ? setUser({
+          id: user.id,
           is_superuser: user.is_superuser,
           group: user.groups.length > 0 && user.groups[0],
         })
       : setLoginError(LOGIN_FAILURE_MSG);
   };
 
-  if (userAuthToken == "")
+  if (userAuthToken == "" || user.id == 0)
     return (
       <Login
         handleLogin={handleLogin}

@@ -14,6 +14,9 @@ class Qaapp(models.Model):
     group = models.ForeignKey(
         Group, null=True, blank=True, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
+    updated_by = models.ForeignKey(
+        User, null=True, blank=True, related_name="updated_by", on_delete=models.CASCADE)
+    updated_at = models.DateTimeField(blank=True, null=True)
     critical = models.BooleanField(default=False)
     question = models.TextField(default="")
     answer = models.TextField(default="")
