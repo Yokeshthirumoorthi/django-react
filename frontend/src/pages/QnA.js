@@ -80,7 +80,6 @@ function CriticalBadge({ isCritical }) {
   );
 }
 
-// Update UpdateDeleteBtns is not used currently. Waiting to add Updated_by and Updated_at fields in the server.
 function UpdateDeleteBtns({ item, updateQnA, deleteQnA }) {
   const [openAddNewModal, setOpenAddNewModal] = useState(false);
   return (

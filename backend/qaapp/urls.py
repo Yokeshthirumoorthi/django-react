@@ -5,13 +5,13 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from .views import QaappView
+from .views import QAOwner
 from .viewsets import QAViewSet
 
 urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('owner/', QaappView.as_view(), name='qaappowner'),
+    path('owner/', QAOwner.as_view(), name='qaowner'),
 ]
 
 router = DefaultRouter()

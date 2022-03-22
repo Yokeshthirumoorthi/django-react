@@ -16,4 +16,5 @@ migrations:
 
 clean:
 	docker-compose down
+	docker volume rm django-react_postgres_data
 	

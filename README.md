@@ -40,6 +40,15 @@ Paswword:   django_react
 Database:   django_react_dev
 ```
 
+### Clean Database
+
+To reset your database run the following commands
+
+```
+make clean
+make setup
+```
+
 ## Author
 
 1. Yokesh Thirumoorthi - initial author - yokeshthirumoorthi@gmail.com
